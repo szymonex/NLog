@@ -611,8 +611,61 @@ namespace NLog.UnitTests.Layouts
             var result = simple.Render(LogEventInfo.CreateNullEvent());
             Assert.Equal("{0} {1}", result);
         }
+        
+        [Theory]
+        [InlineData("", true)]
+        [InlineData(null, true)]
+        [InlineData("'a'", true)]
+        [InlineData("${gdc:a}", false)]
+        public void FromString_isFixedText(string input, bool expected)
+        {
+            // Act
+            var layout = (SimpleLayout) Layout.FromString(input);
 
+            // Assert
+            Assert.Equal(expected, layout.IsFixedText);
+        }        
 
+        [Theory]
+        [InlineData("", true)]
+        [InlineData(null, true)]
+        [InlineData("'a'", true)]
+        [InlineData("${gdc:a}", true)]
+        public void FromString_IsSimpleStringText(string input, bool expected)
+        {
+            // Act
+            var layout = (SimpleLayout) Layout.FromString(input);
+
+            // Assert
+            Assert.Equal(expected, layout.IsSimpleStringText);
+        }        
+
+        [Theory]
+        [InlineData("", true)]
+        [InlineData(null, true)]
+        [InlineData("'a'", true)]
+        [InlineData("${gdc:a}", false)]
+        public void FromString_isThreadSafe(string input, bool expected)
+        {
+            // Act
+            var layout = (SimpleLayout) Layout.FromString(input);
+
+            // Assert
+            Assert.Equal(expected, layout.ThreadSafe);
+        }        
+        [Theory]
+        [InlineData("", true)]
+        [InlineData(null, true)]
+        [InlineData("'a'", true)]
+        [InlineData("${gdc:a}", false)]
+        public void FromString_IsInitialized(string input, bool expected)
+        {
+            // Act
+            var layout = (SimpleLayout) Layout.FromString(input);
+
+            // Assert
+            Assert.Equal(expected, layout.IsInitialized);
+        }
 
         private class LayoutRendererWithListParam : LayoutRenderer
         {
